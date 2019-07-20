@@ -12,12 +12,17 @@ export const fetchData = async dispatch => {
 }
 
 export const addToFave = (dispatch, state, episode) => {
-	const isFave = state.favourites.includes(episode);
-	if (isFave) {
+	const isFave = state.favourites.find( fav => fav.id === episode.id);
+
+	if (isFave) { 
 		dispatch({ type: "REMOVE_FAVE", id: episode.id })
 	}else{
 		dispatch({ type: "ADD_FAVE", episode});	
 	}
 	
+}
 
+
+export const searchData = (dispatch, keyword) => {
+	dispatch({ type: "SEARCH_DATA",  keyword })
 }
