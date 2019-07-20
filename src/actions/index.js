@@ -3,15 +3,17 @@ import axios from '../api';
 
 export const fetchData = async dispatch => {
 	try{
+		dispatch({ type: "FETCH_LOADING"});
 		const res = await axios.get('/singlesearch/shows?q=rick-&-morty&embed=episodes');
 		const data = res.data._embedded.episodes;
-		dispatch({ type: "FETCH_DATA", data });
+		await dispatch({ type: "FETCH_DATA", data });
+		dispatch({ type: "FETCH_LOADING_FINISHED"});
 	}catch(err){
 		console.log(err);
 	}
 }
 
-export const addToFave = (dispatch, state, episode) => {
+export const toggleFave = (dispatch, state, episode) => {
 	const isFave = state.favourites.find( fav => fav.id === episode.id);
 
 	if (isFave) { 
@@ -23,6 +25,24 @@ export const addToFave = (dispatch, state, episode) => {
 }
 
 
-export const searchData = (dispatch, keyword) => {
-	dispatch({ type: "SEARCH_DATA",  keyword })
+export const searchData = async (dispatch, keyword) => {
+	try{
+		dispatch({ type: "FETCH_LOADING"});
+		const res = await axios.get('/singlesearch/shows?q=rick-&-morty&embed=episodes');
+		const data = res.data._embedded.episodes;
+		const filter = data.filter( episode => episode.name.indexOf(keyword) > -1);
+		dispatch({type: "SEARCH_DATA", data: filter })
+		dispatch({ type: "FETCH_LOADING_FINISHED"});
+	}catch(err){
+		console.log(err);
+	}	
+	
+}
+
+export const clearData = (dispatch) => {
+	dispatch({ type: "FETCH_LOADING"});
+}
+
+export const clearSearch = (dispatch) => {
+	dispatch({ type: "CLEAR_SEARCH"});
 }

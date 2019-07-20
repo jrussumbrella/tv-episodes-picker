@@ -1,26 +1,45 @@
- import React, { useEffect, useContext } from 'react';
-import { StoreContext } from '../../store';
-import { fetchData } from '../../actions';
-import EpisodeList from '../../components/EpisodeList/EpisodeList';
+ import React, { Suspense, lazy, useEffect, useContext } from 'react';
+import { StoreContext, DispatchContext } from '../../store';
+import { fetchData, clearData } from '../../actions';
 import styled from 'styled-components';
 
+const EpisodeList = lazy(() => import('../../components/EpisodeList/EpisodeList'))
+
 const Container = styled.div`
-	width: 1200px;
+	max-width: 1200px;
 	margin 0 auto;
 `
 
 const Home = (props) => {
 
- const { state, dispatch } = useContext(StoreContext);
+ const state = useContext(StoreContext);
+ const dispatch = useContext(DispatchContext);
 
+  useFetchEpisodes(); 
+
+  // run everytime addfave/removefave is click
   useEffect(() => {
-  	state.episodes.length === 0 && fetchData(dispatch);
-  	localStorage.setItem('favourites', JSON.stringify(state.favourites))
-  }, [state])
+      localStorage.setItem('favourites', JSON.stringify(state.favourites));
+  }, [state.favourites]);  
+
+ function useFetchEpisodes(){
+   useEffect(() => {
+    state.episodes.length === 0 && fetchData(dispatch);
+    return () => clearData(dispatch);
+  }, [])    
+ }
+
 
   return (
     <Container >
-    	<EpisodeList episodes={ state.episodes }  />
+      <Suspense  fallback={<div>Loading...</div>}>
+      {
+        state.isLoading ?
+        <div> Loading .... </div>
+        :
+    	  <EpisodeList episodes={ state.episodes }  />
+      }
+      </Suspense> 
     </Container>
   )
 }

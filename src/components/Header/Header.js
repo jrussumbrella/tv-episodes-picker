@@ -3,6 +3,7 @@ import { StoreContext } from '../../store';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import history from '../../utils/history';
+import { FiHeart } from "react-icons/fi";
 
 const Navbar = styled.div`
 	width: 100%;
@@ -59,7 +60,7 @@ const Input = styled.input`
 
 const Header = () => {
     
-  const { state } = useContext(StoreContext);	
+  const  state  = useContext(StoreContext);	
   const [search, setSearch] = useState("");
 
 
@@ -89,7 +90,7 @@ const Header = () => {
       </Form>         
       </NavSpacer>
       <NavItem>
-      	<NavLink  to={`${process.env.PUBLIC_URL}/favourites`}> Favorites ({ state.favourites.length }) </NavLink>
+      	<NavLink  to={`${process.env.PUBLIC_URL}/favourites`}> <FiHeart style={{ verticalAlign: "middle", height: "24px", width: "24px"}} /> ({ state.favourites.length }) </NavLink>
       </NavItem>
      </NavContainer>	
     </Navbar>

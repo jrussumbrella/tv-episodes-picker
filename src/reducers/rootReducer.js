@@ -8,8 +8,13 @@ const rootReducer = (state, action) => {
 		case "REMOVE_FAVE":
 		return {...state, favourites: state.favourites.filter(fave => fave.id !== action.id)}
 		case "SEARCH_DATA":
-		console.log(action.keyword);
-		return {...state}
+		return {...state, searchEpisodes: action.data}
+		case "FETCH_LOADING":
+		return {...state, isLoading: true}
+		case "FETCH_LOADING_FINISHED":
+		return {...state, isLoading: false}	
+		case "CLEAR_SEARCH":
+		return {...state, searchEpisodes: []}
 		default:
 	 	return state;
 	}

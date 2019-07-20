@@ -1,27 +1,34 @@
 import React, { useEffect, useContext } from 'react';
-import { StoreContext } from '../../store';
-import { searchData } from '../../actions';
+import { StoreContext, DispatchContext } from '../../store';
+import { searchData, clearSearch } from '../../actions';
 import styled from 'styled-components';
 import EpisodeList from '../../components/EpisodeList/EpisodeList';
 
 const Container = styled.div`
-	width: 1200px;
+	max-width: 1200px;
 	margin 0 auto;
 `
 
 const Search = ({ match }) => {
   
   const { keyword } = match.params;
-  const { state, dispatch } = useContext(StoreContext);
- 
+  const state = useContext(StoreContext);
+  const dispatch  = useContext(DispatchContext);
 
   useEffect(() => {
   	 searchData(dispatch, keyword);	
+     // clean up search when components mount
+     return () => clearSearch(dispatch);
   }, [keyword]);
  
   return (
     <Container>
-      <EpisodeList episodes={ state.episodes }/>
+    {
+      state.isLoading ?
+      <div> Loading.... </div>
+      :
+        <EpisodeList episodes={ state.searchEpisodes }/>
+    }
     </Container>
   )
 }

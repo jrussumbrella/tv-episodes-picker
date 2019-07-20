@@ -35,11 +35,18 @@ const Label = styled.div`
 	margin-bottom: 10px;
 `
 
+const Card = styled.div`
+	background-color: #fff;
+	border-radius: 3px;
+    border: 1px solid #e6e6e6;
+`
+
 
 const EpisodeItem = ({ image, name, season, id, children }) => {
    
   return (
     <Column >
+     <Card>
      <ImageWrapper>
       <Image 
       	src={ image !== null ? image.medium : '' } 
@@ -50,7 +57,8 @@ const EpisodeItem = ({ image, name, season, id, children }) => {
       <ItemName> { name }</ItemName>
       <Label> Season { season }</Label>
       { children }
-     </ItemInfo> 
+     </ItemInfo>
+      </Card> 
     </Column>
   )
 }

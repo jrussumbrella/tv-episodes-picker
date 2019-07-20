@@ -1,22 +1,25 @@
 import React, { useContext }  from 'react';
 import EpisodeItem from '../EpisodeItem/EpisodeItem';
-import { StoreContext } from '../../store';
-import { addToFave } from '../../actions';
+import { StoreContext, DispatchContext } from '../../store';
+import { toggleFave } from '../../actions';
 import styled from 'styled-components';
 import Button from '../Button';
 import EmptyItem from '../EmptyItem/EmptyItem';
+import { FiHeart } from "react-icons/fi";
 
 const EpisodeList = ({ episodes }) => {
 
- const { state, dispatch } = useContext(StoreContext);  
+ const state  = useContext(StoreContext);  
+ const dispatch = useContext(DispatchContext);
 
- const handleAddFave = (episode) => {
-    addToFave(dispatch, state, episode)
+ const handleToggleFave = (episode) => {
+    toggleFave(dispatch, state, episode)
  }
 
  const Wrapper = styled.div`
  display: flex;
- flex-wrap: wrap;   
+ flex-wrap: wrap;  
+ margin: 0 -7.5px; 
  `
 
   return (
@@ -29,20 +32,18 @@ const EpisodeList = ({ episodes }) => {
     			  key={episode.id}
     			  {...episode}
     			>
-                   <div onClick={ () => handleAddFave(episode) }>
-                    <Button
-                        primary 
-                        text={
+                   <div onClick={ () => handleToggleFave(episode) }>
+                   {
                         state.favourites.find( fave => fave.id === episode.id ) 
-                        ? 'Remove to Favorites' : 'Add to Favorites'                         
-                        }
-                    /> 
+                        ?  
+                        <FiHeart style={{ fill: "#d63031", stroke: "#d63031"}} /> :  <FiHeart />                         
+                    }
                     </div>
                 </EpisodeItem>
     		))
             :
             <EmptyItem 
-              msg={'No favourites yet!'}
+              msg={'No items yet!'}
             /> 
     	} 
     </Wrapper>
